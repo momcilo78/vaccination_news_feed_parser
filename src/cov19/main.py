@@ -30,20 +30,6 @@ __version__ = 0.1
 __date__ = '2021-03-16'
 __updated__ = '2021-03-16'
 
-DEBUG = 0
-TESTRUN = 0
-PROFILE = 0
-
-class CLIError(Exception):
-    '''Generic exception to raise and log different fatal errors.'''
-    def __init__(self, msg):
-        super(CLIError).__init__(type(self))
-        self.msg = "E: %s" % msg
-    def __str__(self):
-        return self.msg
-    def __unicode__(self):
-        return self.msg
-
 def process_direct_url(args):
     try:
         # create parsers based on URL
@@ -60,7 +46,7 @@ def process_direct_url(args):
         print("Parsing...")
         result = parser.parse_html(r.text)
         result['url'] = args.url
-# TODO: wait until the upstrea issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
+# TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
 #         # translate into english
 #         translator = Translator()
 #         translation = translator.translate(result['sentence'], src='sr', dest='en')
@@ -72,6 +58,7 @@ def process_direct_url(args):
         print('----------------------------------------------')
     except Exception as e:
         print(e)
+
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
 
@@ -128,22 +115,4 @@ USAGE
 #         return 2
 
 if __name__ == "__main__":
-    if DEBUG:
-        sys.argv.append("-h")
-        sys.argv.append("-v")
-        sys.argv.append("-r")
-    if TESTRUN:
-        import doctest
-        doctest.testmod()
-    if PROFILE:
-        import cProfile
-        import pstats
-        profile_filename = 'cov19.main_profile.txt'
-        cProfile.run('main()', profile_filename)
-        statsfile = open("profile_stats.txt", "wb")
-        p = pstats.Stats(profile_filename, stream=statsfile)
-        stats = p.strip_dirs().sort_stats('cumulative')
-        stats.print_stats()
-        statsfile.close()
-        sys.exit(0)
     sys.exit(main())
