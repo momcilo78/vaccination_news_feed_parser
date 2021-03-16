@@ -17,8 +17,6 @@ cov19.main is a a simple tool combining beatifulsoup4 with regex to extract info
 
 import sys
 import os
-import locale
-import jinja2
 from googletrans import Translator
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -31,20 +29,6 @@ __all__ = []
 __version__ = 0.1
 __date__ = '2021-03-16'
 __updated__ = '2021-03-16'
-
-DEBUG = 0
-TESTRUN = 0
-PROFILE = 0
-
-class CLIError(Exception):
-    '''Generic exception to raise and log different fatal errors.'''
-    def __init__(self, msg):
-        super(CLIError).__init__(type(self))
-        self.msg = "E: %s" % msg
-    def __str__(self):
-        return self.msg
-    def __unicode__(self):
-        return self.msg
 
 def process_direct_url(args):
     try:
@@ -62,7 +46,7 @@ def process_direct_url(args):
         print("Parsing...")
         result = parser.parse_html(r.text)
         result['url'] = args.url
-# TODO: wait until the upstrea issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
+# TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
 #         # translate into english
 #         translator = Translator()
 #         translation = translator.translate(result['sentence'], src='sr', dest='en')
@@ -74,6 +58,7 @@ def process_direct_url(args):
         print('----------------------------------------------')
     except Exception as e:
         print(e)
+
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
 
@@ -97,8 +82,6 @@ USAGE
 
     try:
         executors = {}
-        # define jinja2 filter that prints integer with thousands dot separators
-        jinja2.filters.FILTERS['dots'] = lambda v: '{:,}'.format(v).replace(',','.')
 
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
@@ -123,31 +106,11 @@ USAGE
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 0
-#     except Exception as e:
-#         if DEBUG or TESTRUN:
-#             raise(e)
-#         indent = len(program_name) * " "
-#         sys.stderr.write(program_name + ": " + repr(e) + "\n")
-#         sys.stderr.write(indent + "  for help use --help")
-#         return 2
+    except Exception as e:
+        indent = len(program_name) * " "
+        sys.stderr.write(program_name + ": " + repr(e) + "\n")
+        sys.stderr.write(indent + "  for help use --help")
+        return 2
 
 if __name__ == "__main__":
-    if DEBUG:
-        sys.argv.append("-h")
-        sys.argv.append("-v")
-        sys.argv.append("-r")
-    if TESTRUN:
-        import doctest
-        doctest.testmod()
-    if PROFILE:
-        import cProfile
-        import pstats
-        profile_filename = 'cov19.main_profile.txt'
-        cProfile.run('main()', profile_filename)
-        statsfile = open("profile_stats.txt", "wb")
-        p = pstats.Stats(profile_filename, stream=statsfile)
-        stats = p.strip_dirs().sort_stats('cumulative')
-        stats.print_stats()
-        statsfile.close()
-        sys.exit(0)
     sys.exit(main())

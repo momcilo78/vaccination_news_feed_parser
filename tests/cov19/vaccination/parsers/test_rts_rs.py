@@ -46,9 +46,8 @@ class TestRTSFeerParser(object):
             print("")
             for html_page in html_pages:
                 print(f"Parsing: {html_page['file']}")
-                # print(f"{html_page['html']}")
                 result = parser.parse_html(html_page['html'])
-                print(result)
+                # print(result)
                 assert result != None
                 assert result['news_datetime'] == html_page['news_datetime']
                 assert result['total_number_of_vaccinations'] == html_page['total_number_of_vaccinations']
