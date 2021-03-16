@@ -17,8 +17,9 @@ cov19.main is a a simple tool combining beatifulsoup4 with regex to extract info
 
 import sys
 import os
+import locale
+import jinja2
 from googletrans import Translator
-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from cov19.vaccination.parsers import ParserFactory
@@ -92,6 +93,8 @@ USAGE
 
     try:
         executors = {}
+        # define jinja2 filter that prints integer with thousands dot separators   
+        jinja2.filters.FILTERS['dots'] = lambda v: '{:,}'.format(v).replace(',','.')
 
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
