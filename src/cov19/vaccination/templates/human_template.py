@@ -1,5 +1,5 @@
 import jinja2
-import locale 
+import locale
 
 class HumanTemplate(object):
 	name='human'
@@ -19,8 +19,6 @@ Source: {{ source }} / {{ news_datetime.strftime("%d.%m.%Y, %H:%M") }}
 "In Serbia, according to latest Gov data, there was {{ total_number_of_vaccinations }} vaccinations against Corona virus and {{ fully_vaccinated }} citizens have received second vaccine dose"
 '''
 	def __init__(self):
-# 		env = jinja2.Environment()
-# 		env.filters['commafy'] = lambda v: "{:,}".format(v)
 		self.template = jinja2.Template(HumanTemplate.template_str)
 	def generate(self, result):
 		return self.template.render(result)
