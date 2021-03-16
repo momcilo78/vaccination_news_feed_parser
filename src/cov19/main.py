@@ -54,20 +54,24 @@ def process_direct_url(args):
         # instantiate template generator
         template = TemplateFactory.create_template(args.template)
         # download the URL
+        print(f'Downloading... {args.url}')
         r = requests.get(args.url)
         if r.status_code != 200:
             raise Exception(f"Unable to retrieve URL: {args.url}")
         # parse for results
+        print("Parsing...")
         result = parser.parse_html(r.text)
         result['url'] = args.url
-# TODO: wait until the upstrea issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234    
+# TODO: wait until the upstrea issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
 #         # translate into english
 #         translator = Translator()
 #         translation = translator.translate(result['sentence'], src='sr', dest='en')
-#         result['translation']  = translation 
+#         result['translation']  = translation
         # generate the result
         text = template.generate(result)
+        print('----------------------------------------------')
         print(text)
+        print('----------------------------------------------')
     except Exception as e:
         print(e)
 def main(argv=None): # IGNORE:C0111
@@ -93,21 +97,21 @@ USAGE
 
     try:
         executors = {}
-        # define jinja2 filter that prints integer with thousands dot separators   
+        # define jinja2 filter that prints integer with thousands dot separators
         jinja2.filters.FILTERS['dots'] = lambda v: '{:,}'.format(v).replace(',','.')
 
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         common_arguments_parser = ArgumentParser(add_help=False)
-        common_arguments_parser.add_argument('--dry-run', action='store_true', help='designates if dry run is to be executed. The tool should not change anything. Warning: this feaature is still not fully implemented!')        
+        common_arguments_parser.add_argument('--dry-run', action='store_true', help='designates if dry run is to be executed. The tool should not change anything. Warning: this feaature is still not fully implemented!')
         common_arguments_parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         subparsers  = parser.add_subparsers(help='sub-command help', dest="subparser_name")
 
         parser_process_direct_url = subparsers.add_parser('processDirectURL', help='', parents=[common_arguments_parser])
         parser_process_direct_url.add_argument('--url', required=True, help='url to be processed, tool will determine if it is able to parse it.')
-        parser_process_direct_url.add_argument('--template', default='human', required=False, help='template generator (default is %(default)s) to be used for output', choices=[current.name for current in TemplateFactory.templates ])        
+        parser_process_direct_url.add_argument('--template', default='human', required=False, help='template generator (default is %(default)s) to be used for output', choices=[current.name for current in TemplateFactory.templates ])
         executors[parser_process_direct_url.prog.split(' ')[-1]] = process_direct_url
-        
+
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
 
         # Process arguments

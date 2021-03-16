@@ -3,8 +3,8 @@ import locale
 
 class HumanTemplate(object):
 	name='human'
-	template_str = '''
-Hi @edomt
+	template_str = '''Hi @edomt
+
 Here is the latest report for {{ date.strftime("%d.%m.%Y") }}
 total_vaccinations: {{ total_number_of_vaccinations | dots }}
 people_fully_vaccinated: {{ fully_vaccinated | dots }}
