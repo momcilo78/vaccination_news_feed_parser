@@ -27,7 +27,7 @@ Here is the latest report for 14.03.2021
 total_vaccinations: 2.007.650
 people_fully_vaccinated: 782.668
 people_vaccinated: 782.668 + (2.007.650 - (2 * 782.668)) = 1.224.982
-total_vaccinations_per_hundred: 100 * 2.007.650/6.804.596 = 0.2950432325445919
+total_vaccinations_per_hundred: 100 * 2.007.650/6.804.596 = 29.50432325445919
 
 Source: Serbian National TV / 15.03.2021, 07:00
 
