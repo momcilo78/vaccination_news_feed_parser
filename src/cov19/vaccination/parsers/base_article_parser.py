@@ -1,5 +1,4 @@
 import re
-from dns.rdataclass import NONE
 
 
 class BaseArticleParser(object):
