@@ -46,16 +46,19 @@ def process_direct_url(args):
         print("Parsing...")
         result = parser.parse_html(r.text)
         result['url'] = args.url
-# TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
-#         # translate into english
-#         translator = Translator()
-#         translation = translator.translate(result['sentence'], src='sr', dest='en')
-#         result['translation']  = translation
+        # TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
+        # translate into english
+        translator = Translator()
+        translation = translator.translate("".join(result['quoted_text']), src='sr', dest='en')
+        result['translation']  = translation.text
         # generate the result
-        text = template.generate(result)
-        print('----------------------------------------------')
-        print(text)
-        print('----------------------------------------------')
+        if result['valid']:
+            text = template.generate(result)
+            print('----------------------------------------------')
+            print(text)
+            print('----------------------------------------------')
+        else:
+            print('Result is invalid')
     except Exception as e:
         print(e)
 

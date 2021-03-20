@@ -6,32 +6,34 @@ from cov19.vaccination.templates.human_template import HumanTemplate
 def human_template():
     return HumanTemplate()
 
-class TestParserFactory(object):
+class TestTemplateFactory(object):
 
     def test_create_parser(self, capsys, human_template):
         with capsys.disabled():
             # TODO: add translation here!
             result = {
-                'sentence': 'U Srbiji je do sada dato   2.007.650 doza vakcina protiv koronavirusa, a 782.668 osoba primilo je i drugu dozu, pokazuju najnoviji podaci Vlade Srbije.',
-                'total_number_of_vaccinations': 2007650,
-                'fully_vaccinated': 782668,
+                'text': ['Prema poslednjim podacima, u Srbiji je obavljeno ukupno 2.112.074 vakcinacija','Drugu dozu primio je 826.851 građanin naše zemlje.'],
+                'total_number_of_vaccinations': 2112074,
+                'fully_vaccinated': 826851,
                 'valid': True,
-                'news_datetime': datetime.datetime(2021, 3, 15, 7, 0),
-                'date': datetime.datetime(2021, 3, 14, 0, 0),
-                'source': 'Serbian National TV'
+                'news_datetime': datetime.datetime(2021, 3, 19, 8, 22),
+                'date': datetime.datetime(2021, 3, 18, 0, 0),
+                'source': 'Serbian National TV',
+                'quoted_text': ['Prema poslednjim podacima, u Srbiji je obavljeno ukupno 2.112.074 vakcinacija','Drugu dozu primio je 826.851 građanin naše zemlje.'],
+                'translation': 'According to the latest data, a total of 2,112,074 vaccinations were performed in Serbia. 826,851 citizens of our country received the second dose.'
             }
             output = human_template.generate(result)
             assert output == '''Hi @edomt
 
-Here is the latest report for 14.03.2021
-total_vaccinations: 2.007.650
-people_fully_vaccinated: 782.668
-people_vaccinated: 782.668 + (2.007.650 - (2 * 782.668)) = 1.224.982
-total_vaccinations_per_hundred: 100 * 2.007.650/6.804.596 = 29.50432325445919
+Here is the latest report for 18.03.2021
+total_vaccinations: 2.112.074
+people_fully_vaccinated: 826.851
+people_vaccinated: 826.851 + (2.112.074 - (2 * 826.851)) = 1.285.223
+total_vaccinations_per_hundred: 100 * 2.112.074/6.804.596 = 31.038933097571114
 
-Source: Serbian National TV / 15.03.2021, 07:00
+Source: Serbian National TV / 19.03.2021, 08:22
 
 
 
-"U Srbiji je do sada dato   2.007.650 doza vakcina protiv koronavirusa, a 782.668 osoba primilo je i drugu dozu, pokazuju najnoviji podaci Vlade Srbije."
-"In Serbia, according to latest Gov data, there was 2007650 vaccinations against Corona virus and 782668 citizens have received second vaccine dose"'''
+"Prema poslednjim podacima, u Srbiji je obavljeno ukupno 2.112.074 vakcinacija Drugu dozu primio je 826.851 građanin naše zemlje."
+"According to the latest data, a total of 2,112,074 vaccinations were performed in Serbia. 826,851 citizens of our country received the second dose."'''

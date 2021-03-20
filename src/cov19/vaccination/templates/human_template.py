@@ -15,8 +15,8 @@ Source: {{ source }} / {{ news_datetime.strftime("%d.%m.%Y, %H:%M") }}
 
 {{ url }}
 
-"{{ sentence }}"
-"In Serbia, according to latest Gov data, there was {{ total_number_of_vaccinations }} vaccinations against Corona virus and {{ fully_vaccinated }} citizens have received second vaccine dose"
+"{{ quoted_text | join(' ') }}"
+"{{ translation }}"
 '''
 	def __init__(self):
 		self.template = jinja2.Template(HumanTemplate.template_str)
