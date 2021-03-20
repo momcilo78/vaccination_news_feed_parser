@@ -54,7 +54,7 @@ def html_pages():
     for page in test_pages:
         r = requests.get(page['url'])
         if r.status_code != 200:
-            raise Exception(f"Unable to retrieve URL: {url}")
+            raise Exception(f"Unable to retrieve URL: {page['url']}")
         page['html'] = r.text
     return test_pages
 
