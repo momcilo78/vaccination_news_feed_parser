@@ -24,7 +24,7 @@ setup(
     python_requires=">=3.6",
     entry_points={
         'console_scripts': [
-            'cov19extract=cob19.main:main',
+            'cov19extract=cov19.main:main',
         ],
     },
 )
