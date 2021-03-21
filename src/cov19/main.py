@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # encoding: utf-8
 '''
 cov19.main -- Tool for extraction of online article data about vaccination
@@ -17,6 +17,7 @@ cov19.main is a a simple tool combining beatifulsoup4 with regex to extract info
 
 import sys
 import os
+import traceback
 from googletrans import Translator
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -46,18 +47,22 @@ def process_direct_url(args):
         print("Parsing...")
         result = parser.parse_html(r.text)
         result['url'] = args.url
-# TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
-#         # translate into english
-#         translator = Translator()
-#         translation = translator.translate(result['sentence'], src='sr', dest='en')
-#         result['translation']  = translation
-        # generate the result
-        text = template.generate(result)
-        print('----------------------------------------------')
-        print(text)
-        print('----------------------------------------------')
+        if result['valid']:
+            # TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
+            # translate into english
+            translator = Translator()
+            translation = translator.translate("".join(result['quoted_text']), src='sr', dest='en')
+            result['translation']  = translation.text
+            # generate the result
+            text = template.generate(result)
+            print('----------------------------------------------')
+            print(text)
+            print('----------------------------------------------')
+        else:
+            print('Result is invalid')
     except Exception as e:
         print(e)
+        traceback.print_exc()
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
@@ -106,11 +111,11 @@ USAGE
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 0
-    except Exception as e:
-        indent = len(program_name) * " "
-        sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "  for help use --help")
-        return 2
+#     except Exception as e:
+#         indent = len(program_name) * " "
+#         sys.stderr.write(program_name + ": " + repr(e) + "\n")
+#         sys.stderr.write(indent + "  for help use --help")
+#         return 2
 
 if __name__ == "__main__":
     sys.exit(main())
