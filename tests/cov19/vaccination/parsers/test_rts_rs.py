@@ -11,45 +11,69 @@ from _pytest.hookspec import pytest_fixture_post_finalizer
 def parser():
     return RTSFeedParser()
 
-
-# @pytest.fixture
-# def html_pages():
-#     base_path = os.path.join(os.path.dirname(__file__), 'fixtures', 'html', 'rts')
-#     html_files = [current for current in os.listdir(base_path) if (current.endswith('.html') or current.endswith('.htm'))]
-#     collection = []
-#     for current in html_files:
-#         with open(os.path.join(base_path, current)) as res_file:
-#             elements = os.path.splitext(current)[0].split('_')
-#             entry_date = elements[1]
-#             year = int(entry_date[0:4])
-#             month = int(entry_date[5:6])
-#             day = int(entry_date[6:8])
-#             entry_time = elements[2]
-#             hour = int(entry_time[0:2])
-#             minute = int(entry_time[2:4])
-#             feed_entry_total_vaccinations = int(elements[3])
-#             feed_entry_total_full_vaccinated = int(elements[4])
-#             html_page = res_file.read()
-#             collection.append(
-#                 {
-#                     'file': current,
-#                     'html': html_page,
-#                     'news_datetime': datetime.datetime(year, month, day, hour, minute),
-#                     'total_number_of_vaccinations': feed_entry_total_vaccinations,
-#                     'fully_vaccinated': feed_entry_total_full_vaccinated
-#                 }
-#             )
-#     return collection
-
 @pytest.fixture
 def html_pages():
     test_pages = [
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4289883/korona-srbija-podaci-zarazeni.html',
+            'total_number_of_vaccinations': 1827340,
+            'fully_vaccinated': 666146,
+            'news_datetime': datetime.datetime(2021,3,11,21,50)
+        },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4293159/koronavirus-vakcinacija-zarazeni-srbija-epidemija.html',
+            'total_number_of_vaccinations': 1957065,
+            'fully_vaccinated': 738756,
+            'news_datetime': datetime.datetime(2021,3,14,11,16)
+        },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4294241/koronavirus-kovid-19-vakcina-epidemija-srbija.html',
+            'total_number_of_vaccinations': 2007650,
+            'fully_vaccinated': 782668,
+            'news_datetime': datetime.datetime(2021,3,15,7,0)
+        },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4297152/koronavirus-srbija-nove-mere.html',
+            'total_number_of_vaccinations': 2052402,
+            'fully_vaccinated': 793926,
+            'news_datetime': datetime.datetime(2021,3,17,8,14)
+        },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4297614/koronavirus-srbija-podaci-17.-mart.html',
+            'total_number_of_vaccinations': 2077197,
+            'fully_vaccinated': 809375,
+            'news_datetime': datetime.datetime(2021,3,17,19,17)
+        },
         {
             'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4300365/koronavirus-srbija-broj-zarazenih-preminulih-vakcinacija-mere.html',
             'total_number_of_vaccinations': 2112074,
             'fully_vaccinated': 826851,
             'news_datetime': datetime.datetime(2021,3,19,8,22)
         },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4301815/koronavirus-srbija-zarazeni-podaci.html',
+            'total_number_of_vaccinations': 2161595,
+            'fully_vaccinated': 857934,
+            'news_datetime': datetime.datetime(2021,3,20,15,7)
+        },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4302356/koronavirus-kovid-19-vakcine-srbija-epidemija.html',
+            'total_number_of_vaccinations': 2163593,
+            'fully_vaccinated': 858461,
+            'news_datetime': datetime.datetime(2021,3,21,6,35)
+        },
+        {
+            'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4295816/koronavirus-kovid-19-vakcine-srbija-epidemija.html',
+            'total_number_of_vaccinations': 2040313,
+            'fully_vaccinated': 791269,
+            'news_datetime': datetime.datetime(2021,3,16,8,50)
+        },
+#         {
+#             'url': '',
+#             'total_number_of_vaccinations': 0,
+#             'fully_vaccinated': 0,
+#             'news_datetime': datetime.datetime(2021,3,0,0,0)
+#         },
     ]
     for page in test_pages:
         r = requests.get(page['url'])

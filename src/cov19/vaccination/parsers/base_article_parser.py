@@ -18,7 +18,7 @@ class BaseArticleParser(object):
         regex_sentence_total_vaccination_list.append(r"obavljeno\s+{regex_number} vakcinacija".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"izvršene\s+{regex_number} vakcinacije".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"izvršeno\s+{regex_number} vakcinacija".format(regex_number=regex_number))
-
+                                                
         self.regex_sentence_total_vaccination_list = self._compile_regex(regex_sentence_total_vaccination_list)
 
         regex_sentence_fully_vaccinated_list = []
@@ -32,10 +32,14 @@ class BaseArticleParser(object):
         regex_sentence_fully_vaccinated_list.append(r"drugu dozu vakcine je primio {regex_number} (građanin|gradjnin)".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"drugu dozu primio je {regex_number}\s+(građanin|gradjnin)".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"drugu dozu je primio {regex_number} (građanin|gradjnin)".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"drugu dozu primilo {regex_number} (građana|gradjna|osoba|ljudi)".format(regex_number=regex_number))        
         regex_sentence_fully_vaccinated_list.append(r"{regex_number} (građana|gradjana|ljudi|osoba) dobilo je drugu vakcinu".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"{regex_number} (građana|gradjana|ljudi|osoba) dobilo je i drugu vakcinu".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"{regex_number} (građana|gradjana|ljudi|osoba) dobilo je drugu dozu".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"{regex_number} (građana|gradjana|ljudi|osoba) dobilo je i drugu dozu".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"{regex_number} (građana|gradjana|ljudi|osoba) primilo je i drugu dozu".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"{regex_number} (osobe) primile su i drugu dozu".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"{regex_number} (osobe) primile su drugu dozu".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"obe doze primilo je {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"obe doze je primilo {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"obe doze vakcine primilo je {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
@@ -65,19 +69,14 @@ class BaseArticleParser(object):
             total_vaccination_number_results = self._parse_against_regex_list(sentence, self.regex_sentence_total_vaccination_list)            
             if total_vaccination_number_results:
                 result['total_number_of_vaccinations'] = total_vaccination_number_results
-                result['quoted_text'].append(sentence)
+                if sentence not in result['quoted_text']:
+                    result['quoted_text'].append(sentence)
             fully_vaccinated_number_results = self._parse_against_regex_list(sentence, self.regex_sentence_fully_vaccinated_list)
             if fully_vaccinated_number_results:
                 result['fully_vaccinated'] = fully_vaccinated_number_results
-                result['quoted_text'].append(sentence)
+                if sentence not in result['quoted_text']:
+                    result['quoted_text'].append(sentence)
     
-#     def parse_sentence(self, text, result):
-#         total_vaccination_number_results = self._parse_against_regex_list(text, self.regex_sentence_total_vaccination_list)
-#         fully_vaccinated_number_results = self._parse_against_regex_list(text, self.regex_sentence_fully_vaccinated_list)
-#         result['text'] = text
-#         result['total_number_of_vaccinations'] = total_vaccination_number_results
-#         result['fully_vaccinated'] = fully_vaccinated_number_results
-
     def _compile_regex(self, regex_list):
         compiled_regex_list = []
         for regex in regex_list:

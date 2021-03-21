@@ -9,7 +9,8 @@ class ParserFactory(object):
         if not isinstance(url, str):
             raise(TypeError('Input parameter url is not str')) 
         for parser in ParserFactory.parsers:
-            parser_url = parser.url
-            if url.startswith(parser_url):
-                return parser()
+            parser_urls = parser.urls_bases
+            for parser_url in parser_urls:
+                if url.startswith(parser_url):
+                    return parser()
         raise LookupError(f"Unable to find the parser for url: '{url}'")
