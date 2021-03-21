@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
 # encoding: utf-8
 '''
-cov19.main -- Tool for extraction of online article data about vaccination
+cov19extract -- Tool for extraction of online article data about vaccination
 
-cov19.main is a a simple tool combining beatifulsoup4 with regex to extract information about web site. For each site appropriate classes have to be implemented separately.
+cov19extract is a a simple tool combining beatifulsoup4 with regex to extract information about web site. For each site appropriate classes have to be implemented separately.
 
 @author:     Momcilo Majic
 
@@ -62,7 +62,7 @@ def process_direct_url(args):
             print('Result is invalid')
     except Exception as e:
         print(e)
-        traceback.print_exc()
+#        traceback.print_exc()
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
@@ -76,7 +76,7 @@ def main(argv=None): # IGNORE:C0111
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
     program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
-    program_shortdesc = 'cov19.main -- Tool for extraction of online article data about vaccination'
+    program_shortdesc = 'cov19extract -- Tool for extraction of online article data about vaccination'
     program_license = '''%s
 
   Created by Momcilo Majic on %s.
@@ -95,7 +95,7 @@ USAGE
         common_arguments_parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         subparsers  = parser.add_subparsers(help='sub-command help', dest="subparser_name")
 
-        parser_process_direct_url = subparsers.add_parser('processDirectURL', help='', parents=[common_arguments_parser])
+        parser_process_direct_url = subparsers.add_parser('processDirectURL', help='attempts to parse content at directly specified URL.', parents=[common_arguments_parser])
         parser_process_direct_url.add_argument('--url', required=True, help='url to be processed, tool will determine if it is able to parse it.')
         parser_process_direct_url.add_argument('--template', default='human', required=False, help='template generator (default is %(default)s) to be used for output', choices=[current.name for current in TemplateFactory.templates ])
         executors[parser_process_direct_url.prog.split(' ')[-1]] = process_direct_url
