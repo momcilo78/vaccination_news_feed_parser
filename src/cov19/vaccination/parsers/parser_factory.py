@@ -1,8 +1,9 @@
-from cov19.vaccination.parsers import RTSFeedParser
+from cov19.vaccination.parsers import RTSFeedParser, GenericArticleParser
 
 class ParserFactory(object):
     parsers = [
-            RTSFeedParser
+            RTSFeedParser,
+            GenericArticleParser
         ]
     @staticmethod
     def create_parser(url):
