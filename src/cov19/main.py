@@ -45,7 +45,7 @@ def process_direct_url(args):
             raise Exception(f"Unable to retrieve URL: {args.url}")
         # parse for results
         print("Parsing...")
-        result = parser.parse_html(r.text)
+        result = parser.parse_html(r.content)
         result['url'] = args.url
         if result['valid']:
             # TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
