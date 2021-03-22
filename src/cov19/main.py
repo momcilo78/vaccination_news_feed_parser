@@ -51,7 +51,8 @@ def process_direct_url(args):
             # TODO: wait until the upstream issue with google translator gets resolved, https://github.com/ssut/py-googletrans/issues/234
             # translate into english
             translator = Translator()
-            translation = translator.translate("".join(result['quoted_text']), src='sr', dest='en')
+            quoted_text = "".join(result['quoted_text'])
+            translation = translator.translate(quoted_text, src='sr', dest='en')
             result['translation']  = translation.text
             # generate the result
             text = template.generate(result)
@@ -62,7 +63,7 @@ def process_direct_url(args):
             print('Result is invalid')
     except Exception as e:
         print(e)
-#        traceback.print_exc()
+        traceback.print_exc()
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
@@ -104,10 +105,12 @@ USAGE
 
         # Process arguments
         args = parser.parse_args()
-
-        executor = executors[args.subparser_name]
-        # execute command
-        return executor(args)
+        if args.subparser_name:
+            executor = executors[args.subparser_name]
+            # execute command
+            return executor(args)
+        else:
+            parser.print_help()
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 0
