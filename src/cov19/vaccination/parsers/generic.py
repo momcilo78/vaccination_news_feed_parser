@@ -8,38 +8,39 @@ class GenericArticleParser(BaseArticleParser):
         'http://',
         'https://'
     ]
-    lookup_numeric_month = {
-        'jan': 1,
-        'feb': 2,
-        'mar': 3,
-        'apr': 4,
-        'maj': 5,
-        'jun': 6,
-        'jul': 7,
-        'avg': 8,
-        'sep': 9,
-        'okt': 10,
-        'nov': 11,
-        'dec': 12
-    }
 
     def parse_html(self, html):
-        parsed_article_time = None
+        parsed_article_date = None
         soup = BeautifulSoup(html, 'html.parser')
         article_times = soup.find_all('time')
+        parsed_article_datetime = None
         if article_times:
             for article_time in article_times:
-                parsed_article_time = self.parse_date(article_time.text)
+                parsed_article_date = self.parse_date(article_time.text)
+                parsed_article_time = self.parse_time(article_time.text)
+                # if parsed stop processing
+                if parsed_article_date and parsed_article_time:
+                    parsed_article_datetime = parsed_article_date + parsed_article_time
+                    break
         paragraphs = soup.find_all(['p', 'h', 'div', 'span'])
-        paragraphs = soup.find_all(['p'])
+        # if the date was not found before with time, try with other elements
+        if not parsed_article_date:
+            for paragraph in paragraphs:
+                parsed_article_date = self.parse_date(paragraph.text)
+                parsed_article_time = self.parse_time(paragraph.text)
+                if parsed_article_date and parsed_article_time:
+                    parsed_article_datetime = parsed_article_date + parsed_article_time
+                    break
+
+        # paragraphs = soup.find_all(['p'])
         # set default result
         result = {
             'valid': False,
-            'news_datetime': parsed_article_time,
-            'date': parsed_article_time - datetime.timedelta(days = 1),
+            'news_datetime': parsed_article_datetime,
+            'date': parsed_article_datetime - datetime.timedelta(days = 1),
             'total_number_of_vaccinations': 0,
             'fully_vaccinated': 0,
-            'source': 'Uknown'
+            'source': 'Unknown'
         }
 
         sentences = []

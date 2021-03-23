@@ -1,4 +1,5 @@
 import pytest
+import datetime
 from cov19.vaccination.parsers import BaseArticleParser
 
 @pytest.fixture
@@ -122,3 +123,34 @@ class TestBaseArticleParser(object):
             parser.parse_text(current_news['text'], result)
             assert result['total_number_of_vaccinations'] == current_news['total_number_of_vaccinations']
             assert result['fully_vaccinated'] == current_news['fully_vaccinated']
+
+    def test_parse_date(self, capsys, parser):
+        with capsys.disabled():
+            text = '22.03.2021'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22.03.2021.'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22.03.21'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22/03/2021'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22/03/21'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22. Mart 2021.'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22. Mar 2021'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '22. Mar 21'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+            text = '2021-03-22'
+            parsed_date = parser.parse_date(text)
+            assert parsed_date == datetime.datetime(2021,3,22)
+

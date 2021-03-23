@@ -89,30 +89,39 @@ class BaseArticleParser(object):
         # regex for alpha numeric date
         regex_alpha_numeric_date_list = [
             # 23. Mart 2021., 23. Mart 2021,23. Mar 2021
-            r"\d{1,2}\.?({months} \d{4}\.?)".replace('{months}','|'.join(self.lookup_numeric_month.keys())),
+            r"(\d{1,2})\.?\s+({months})\s+(\d{4})\.?".replace('{months}','|'.join(self.lookup_numeric_month.keys())),
             # 23. Mart 21., 23. Mart 21,23. Mar 21
-            r"\d{1,2}\.?({months} \d{2}\.?)".replace('{months}','|'.join(self.lookup_numeric_month.keys())),
+            r"(\d{1,2})\.?\s+({months})\s+(\d{2})\.?".replace('{months}','|'.join(self.lookup_numeric_month.keys())),
         ]
         print(regex_alpha_numeric_date_list)
         self.regex_alpha_numeric_date_list = self._compile_regex(regex_alpha_numeric_date_list)
 
         # 2021-03-22, 2021-3-22, 2021-03-2
-        self.regex_inverted_date = r"(\d{4})-(\d{1,2})-(\d{1,2})"
+        self.regex_inverted_date = re.compile(r"(\d{4})-(\d{1,2})-(\d{1,2})")
 
+        self.regex_time = re.compile(r"([0-1]?[0-9]|2[0-3]):([0-5][0-9])")
 
-    def parse_date(self, text):
+    def parse_date(self, text, century=(datetime.date.today().year // 100) - 1):
         # first numeric
-        parsed_date = self._parse_date_against_numeric_regex_list(text)
+        parsed_date = self._parse_date_against_numeric_regex_list(text, century)
         if parsed_date:
             return parsed_date
         # now with alpha-numeric date
-        parsed_date = self._parse_date_against_alpha_numeric_regex_list(text)
+        parsed_date = self._parse_date_against_alpha_numeric_regex_list(text, century)
         if parsed_date:
             return parsed_date
         # last resort: reverse
         parsed_date = self._parse_reverse_date(text)
         if parsed_date:
             return parsed_date
+    
+    def parse_time(self, text):
+        regex_result = self.regex_time.search(text)
+        if regex_result:
+            groups = regex_result.groups()
+            if len(groups) == 2:
+                return datetime.timedelta(hours = int(groups[0]), minutes = int(groups[1]))
+        
 
     def parse_text(self, text, result):
         result['text'] = text
@@ -145,26 +154,31 @@ class BaseArticleParser(object):
                 result = int(regex_sentece_result.groups()[0].replace('.', ''))
                 return result
 
-    def _parse_date_against_numeric_regex_list(self, text):
+    def _parse_date_against_numeric_regex_list(self, text, century):
         for regex in self.regex_numeric_date_list:
             regex_result = regex.search(text)
             if regex_result:
                 day = int(regex_result.groups()[0])
                 month = int(regex_result.groups()[1])
-                year = int(regex_result.groups()[2])
-                print(day)
-                print(month)
-                print(year)
+                year_string = regex_result.groups()[2]
+                # if short year form is used make sure it uses century information
+                if len(year_string) != 4:
+                    year_string = f'{century + 1}{year_string}'
+                year = int(year_string)
                 result = datetime.datetime(year, month, day)
                 return result
 
-    def _parse_date_against_alpha_numeric_regex_list(self, text):
+    def _parse_date_against_alpha_numeric_regex_list(self, text, century):
         for regex in self.regex_alpha_numeric_date_list:
             regex_result = regex.search(text)
             if regex_result:
                 day = int(regex_result.groups()[0])
-                month = self.lookup_numeric_month[regex_result.groups()[1]]
-                year = int(regex_result.groups()[2])
+                month = self.lookup_numeric_month[regex_result.groups()[1].lower()]
+                year_string = regex_result.groups()[2]
+                # if short year form is used make sure it uses century information
+                if len(year_string) != 4:
+                    year_string = f'{century + 1}{year_string}'
+                year = int(year_string)
                 result = datetime.datetime(year, month, day)
                 return result
 
