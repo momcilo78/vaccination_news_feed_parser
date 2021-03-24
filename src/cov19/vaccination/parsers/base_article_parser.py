@@ -8,11 +8,13 @@ class BaseArticleParser(object):
 
         # regex for total vaccination
         regex_sentence_total_vaccination_list = []
-        regex_sentence_total_vaccination_list.append(r"vakcinisano je {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
+        regex_sentence_total_vaccination_list.append(r"\svakcinisano je {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"je vakcinisano {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"dato {regex_number} (vakcina|doza)".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"dato\s+{regex_number} doza vakcina".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"dato\s+{regex_number} (doza|vakcina)".format(regex_number=regex_number))
+        regex_sentence_total_vaccination_list.append(r"data\s+{regex_number} doza vakcina".format(regex_number=regex_number))
+        regex_sentence_total_vaccination_list.append(r"data\s+{regex_number} (doza|vakcina)".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"dato je\s+{regex_number} (vakcina|doza)".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"dato je\s+ukupno\s+{regex_number} (vakcina|doza)".format(regex_number=regex_number))
         regex_sentence_total_vaccination_list.append(r"Ukupno vakcinacija:\s+{regex_number}".format(regex_number=regex_number))
@@ -60,6 +62,10 @@ class BaseArticleParser(object):
         regex_sentence_fully_vaccinated_list.append(r"od čega je {regex_number} (građana|gradjana|ljudi|osobe) primilo i drugu dozu".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"od čega je {regex_number} (građana|gradjana|ljudi|osobe) primilo drugu dozu vakcine".format(regex_number=regex_number))
         regex_sentence_fully_vaccinated_list.append(r"od čega je {regex_number} (građana|gradjana|ljudi|osobe) primilo drugu dozu".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"njih {regex_number} primilo drugu dozu".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"njih {regex_number} (i) revakcinisano".format(regex_number=regex_number))
+        regex_sentence_fully_vaccinated_list.append(r"revakcinisano je {regex_number} (građana|gradjana|ljudi|osoba)".format(regex_number=regex_number))
+
         self.regex_sentence_fully_vaccinated_list = self._compile_regex(regex_sentence_fully_vaccinated_list)
 
         # regex for purely numeric date
@@ -93,13 +99,87 @@ class BaseArticleParser(object):
             # 23. Mart 21., 23. Mart 21,23. Mar 21
             r"(\d{1,2})\.?\s+({months})\s+(\d{2})\.?".replace('{months}','|'.join(self.lookup_numeric_month.keys())),
         ]
-        print(regex_alpha_numeric_date_list)
         self.regex_alpha_numeric_date_list = self._compile_regex(regex_alpha_numeric_date_list)
 
         # 2021-03-22, 2021-3-22, 2021-03-2
         self.regex_inverted_date = re.compile(r"(\d{4})-(\d{1,2})-(\d{1,2})")
 
         self.regex_time = re.compile(r"([0-1]?[0-9]|2[0-3]):([0-5][0-9])")
+        self.translations = [
+            str.maketrans(
+                {
+                    'ð': 'đ',
+                    # 'š': 'š',
+                    '\x9a': 'š',
+                    '\xa0': ' ',
+                    # '\xa1': ''
+                }
+            ),
+            str.maketrans(
+                {
+                    'а': 'a',
+                    'б': 'b',
+                    'в': 'v',
+                    'г': 'g',
+                    'д': 'd',
+                    'ђ': 'đ',
+                    'е': 'e',
+                    'ж': 'ž',
+                    'з': 'z',
+                    'и': 'i',
+                    'ј': 'j',
+                    'к': 'k',
+                    'л': 'l',
+                    'љ': 'lj',
+                    'м': 'm',
+                    'н': 'm',
+                    'њ': 'nj',
+                    'о': 'o',
+                    'п': 'p',
+                    'р': 'r',
+                    'с': 's',
+                    'т': 't',
+                    'ћ': 'ć',
+                    'у': 'u',
+                    'ф': 'f',
+                    'х': 'h',
+                    'ц': 'c',
+                    'ч': 'č',
+                    'џ': 'dž',
+                    'ш': 'š',
+                    'А': 'A',
+                    'Б': 'B',
+                    'В': 'V',
+                    'Г': 'G',
+                    'Д': 'D',
+                    'Ђ': 'Đ',
+                    'Е': 'E',
+                    'Ж': 'Ž',
+                    'З': 'Z',
+                    'И': 'I',
+                    'Ј': 'J',
+                    'К': 'K',
+                    'Л': 'L',
+                    'Љ': 'Lj',
+                    'М': 'M',
+                    'Н': 'N',
+                    'Њ': 'Nj',
+                    'О': 'O',
+                    'П': 'P',
+                    'Р': 'R',
+                    'С': 'S',
+                    'Т': 'T',
+                    'Ћ': 'Ć',
+                    'У': 'U',
+                    'Ф': 'F',
+                    'Х': 'H',
+                    'Ц': 'C',
+                    'Ч': 'Č',
+                    'Џ': 'Dž',
+                    'Ш': 'Š',
+                }
+            )
+        ]
 
     def parse_date(self, text, century=(datetime.date.today().year // 100) - 1):
         # first numeric
@@ -114,14 +194,14 @@ class BaseArticleParser(object):
         parsed_date = self._parse_reverse_date(text)
         if parsed_date:
             return parsed_date
-    
+
     def parse_time(self, text):
         regex_result = self.regex_time.search(text)
         if regex_result:
             groups = regex_result.groups()
             if len(groups) == 2:
                 return datetime.timedelta(hours = int(groups[0]), minutes = int(groups[1]))
-        
+
 
     def parse_text(self, text, result):
         result['text'] = text
@@ -147,7 +227,10 @@ class BaseArticleParser(object):
             compiled_regex_list.append(compiled_regex)
         return compiled_regex_list
 
+
     def _parse_against_regex_list(self, text, regex_list):
+        for translation in self.translations:
+            text = text.translate(translation)
         for regex_sentence in regex_list:
             regex_sentece_result = regex_sentence.search(text)
             if regex_sentece_result:

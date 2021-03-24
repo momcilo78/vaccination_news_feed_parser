@@ -17,24 +17,24 @@ def html_pages():
             'fully_vaccinated': 666146,
             'news_datetime': datetime.datetime(2021,3,11,15,0)
         },
-        # {
-        #     'url': 'https://www.b92.net/info/vesti/index.php?yyyy=2021&mm=03&dd=17&nav_category=12&nav_id=1828095',
-        #     'total_number_of_vaccinations': 2052402,
-        #     'fully_vaccinated': 793926,
-        #     'news_datetime': datetime.datetime(2021,3,17,8,15)
-        # },
-        # {
-        #     'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4294241/koronavirus-kovid-19-vakcina-epidemija-srbija.html',
-        #     'total_number_of_vaccinations': 2007650,
-        #     'fully_vaccinated': 782668,
-        #     'news_datetime': datetime.datetime(2021,3,15,7,0)
-        # },
-        # {
-        #     'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4297152/koronavirus-srbija-nove-mere.html',
-        #     'total_number_of_vaccinations': 2052402,
-        #     'fully_vaccinated': 793926,
-        #     'news_datetime': datetime.datetime(2021,3,17,8,14)
-        # },
+        {
+            'url': 'https://www.b92.net/info/vesti/index.php?yyyy=2021&mm=03&dd=17&nav_category=12&nav_id=1828095',
+            'total_number_of_vaccinations': 2052402,
+            'fully_vaccinated': 793926,
+            'news_datetime': datetime.datetime(2021,3,17,8,15)
+        },
+        {
+            'url': 'https://www.b92.net/info/vesti/index.php?yyyy=2021&mm=03&dd=24&nav_category=12&nav_id=1831791',
+            'total_number_of_vaccinations': 2206821,
+            'fully_vaccinated': 876436,
+            'news_datetime': datetime.datetime(2021,3,24,7,20)
+        },
+        {
+            'url': 'https://www.b92.net/info/vesti/index.php?yyyy=2021&mm=02&dd=23&nav_category=12&nav_id=1816193',
+            'total_number_of_vaccinations': 1263111,
+            'fully_vaccinated': 451658,
+            'news_datetime': datetime.datetime(2021,2,23,7,3)
+        },
         # {
         #     'url': 'https://www.rts.rs/page/stories/sr/%D0%9A%D0%BE%D1%80%D0%BE%D0%BD%D0%B0%D0%B2%D0%B8%D1%80%D1%83%D1%81/story/3134/koronavirus-u-srbiji/4297614/koronavirus-srbija-podaci-17.-mart.html',
         #     'total_number_of_vaccinations': 2077197,

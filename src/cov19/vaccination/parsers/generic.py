@@ -22,7 +22,7 @@ class GenericArticleParser(BaseArticleParser):
                 if parsed_article_date and parsed_article_time:
                     parsed_article_datetime = parsed_article_date + parsed_article_time
                     break
-        paragraphs = soup.find_all(['p', 'h', 'div', 'span'])
+        paragraphs = soup.find_all(['p', 'h', 'h1', 'h2','h3','h4', 'div', 'span'])
         # if the date was not found before with time, try with other elements
         if not parsed_article_date:
             for paragraph in paragraphs:
@@ -48,10 +48,9 @@ class GenericArticleParser(BaseArticleParser):
             paragraph_text = paragraph.text.strip()
             paragraph_sentences = paragraph_text.split('. ')
             for sentence in paragraph_sentences:
-                sentences.append(sentence.replace('\xa0', ' '))
+                sentences.append(sentence)
         self.parse_text(sentences, result)
         self.validate_result(result)
-        print(result)
         return result
             # if len(p_text) > 1:
             #     print(p_text)

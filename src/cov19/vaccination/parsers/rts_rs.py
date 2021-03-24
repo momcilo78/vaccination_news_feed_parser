@@ -33,7 +33,7 @@ class RTSFeedParser(BaseArticleParser):
         month = RTSFeedParser.lookup_numeric_month[raw_story_date[1]]
         year = int(raw_story_date[2])
         main_lead = None
-        
+
         # set default result
         result = {
             'valid': False,
@@ -43,14 +43,14 @@ class RTSFeedParser(BaseArticleParser):
             'fully_vaccinated': 0,
             'source': 'Serbian National TV'
         }
-        
+
         # locate main lead, it should be used in worse case, since this lead can change during the day!
         article_main_lead = soup.find('p', {"class": "storyMainLead"})
         if article_main_lead:
             main_lead = article_main_lead.text
-        
+
         # lookup all feed entries
-        feed_entries = soup.find_all("div", {"class": "short-story-holder"})        
+        feed_entries = soup.find_all("div", {"class": "short-story-holder"})
         # process each entry
         for feed in feed_entries:
             sentences = []
@@ -80,7 +80,7 @@ class RTSFeedParser(BaseArticleParser):
                 for body_paragraph in body_paragraphs:
                     paragraph_sentences = body_paragraph.text.split('. ')
                     for sentence in paragraph_sentences:
-                        sentences.append(sentence.replace('\xa0', ' '))
+                        sentences.append(sentence)
             # main lead is added to the end
             if main_lead:
                 sentences.append(main_lead)
